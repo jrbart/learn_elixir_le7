@@ -45,7 +45,17 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
       res = Absinthe.run(@user_doc1, Schema, variables: %{"name" => name})
 
       assert {:ok, %{errors: [%{message: error}]}} = res
-      assert "not created" = error
+      assert "email: can't be blank" = error
+    end
+
+    test "fails if duplicate email" do
+      name = "test"
+      email = "test@example.com"
+      _res = Absinthe.run(@user_doc1, Schema, variables: %{"name" => name, "email" => email})
+      res = Absinthe.run(@user_doc1, Schema, variables: %{"name" => name, "email" => email})
+
+      assert {:ok, %{errors: [%{message: error}]}} = res
+      assert "email: invalid email address" = error
     end
   end
 
@@ -80,6 +90,41 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
       # check that database was update
       {:ok, user} = Users.get_by_id(user.id)
       assert user.name == "new_name"
+    end
+
+    test "fails correctly with bad ID" do
+      user_id = 0
+
+      assert res =
+               Absinthe.run(@user_doc2, Schema,
+                 variables: %{
+                   "id" => user_id,
+                   "name" => "new_name",
+                   "email" => "new_email@example.com"
+                 }
+               )
+
+      # check GraphQL response
+      assert {:ok, %{errors: [%{message: error}]}} = res
+      assert "id: not found" = error
+    end
+
+    test "fails correctly with invalid data" do
+      test_user = AF.build(:account)
+      {:ok, user} = Users.create_user(test_user)
+
+      assert res =
+               Absinthe.run(@user_doc2, Schema,
+                 variables: %{
+                   "id" => user.id,
+                   "name" => "new_name",
+                   "email" => "new_email"
+                 }
+               )
+
+      # check GraphQL response
+      assert {:ok, %{errors: [%{message: error}]}} = res
+      assert "email: has invalid format" = error
     end
   end
 
@@ -139,6 +184,22 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
       assert prefs.likes_phone_calls == true
       assert prefs.likes_emails == true
       assert prefs.likes_faxes == true
+    end
+
+    test "fails correctly with bad ID" do
+      user_id = 0
+
+      assert res =
+               Absinthe.run(@user_doc3, Schema,
+                 variables: %{
+                   "id" => user_id,
+                   "emails" => true
+                 }
+               )
+
+      # check GraphQL response
+      assert {:ok, %{errors: [%{message: error}]}} = res
+      assert "id: not found" = error
     end
   end
 end

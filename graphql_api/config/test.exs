@@ -20,8 +20,11 @@ config :graphql_api, GraphqlApi.Mailer, adapter: Swoosh.Adapters.Test
 # Disable swoosh api client as it is only required for production adapters
 config :swoosh, :api_client, false
 
-# Print only warnings and errors during test
-config :logger, level: :warning
+# Get LOG_LEVEL from environment, default to warning
+log_level = System.get_env("LOG_LEVEL", "warning") |> String.to_atom()
+
+config :logger,
+  level: log_level
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime

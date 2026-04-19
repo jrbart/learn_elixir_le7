@@ -1,4 +1,4 @@
-defmodule GraphqlApi.UsersTest do
+defmodule GraphqlApi.UsersMockTest do
   use ExUnit.Case
   use Mimic.DSL
   use GraphqlApi.RepoMock

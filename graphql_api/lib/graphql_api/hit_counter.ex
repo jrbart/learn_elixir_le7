@@ -1,5 +1,4 @@
 defmodule GraphqlApi.HitCounter do
-  require Logger
   use Agent
 
   def start_link(init \\ %{}) do
@@ -11,7 +10,7 @@ defmodule GraphqlApi.HitCounter do
   end
 
   def increment(key) do
-    Logger.info("INC #{key} #{value(key)}")
+    SharedUtils.Logger.info(__MODULE__, "INC #{key} #{value(key)}")
     Agent.update(__MODULE__, &Map.update(&1, key, 1, fn v -> v + 1 end))
   end
 end

@@ -12,6 +12,8 @@ defmodule GraphqlApi.Users do
   alias GraphqlApi.Repo
   alias EctoShorts.Actions
 
+  import SharedUtils.Error, only: [not_found: 2]
+
   @doc """
   Return list of all users.  Useful for experimenting in IEX repl
   """
@@ -24,7 +26,7 @@ defmodule GraphqlApi.Users do
   """
   def get_by_id(id) do
     case Actions.get(User, id) do
-      nil -> {:error, %{message: "not found", details: %{id: id}}}
+      nil -> {:error, not_found("id: not found", %{details: %{id: id}})}
       user -> {:ok, user}
     end
   end
@@ -48,19 +50,17 @@ defmodule GraphqlApi.Users do
   end
 
   @doc """
-  Return a tuple with {:ok, created_user} or {:error, message}
+  Return a tuple with {:ok, created_user} or Ecto error tuple
   """
   def create_user(attrs) do
     user = User.changeset(%User{}, attrs)
 
-    case Repo.insert(user, preload: :preferences) do
-      {:error, _err} -> {:error, %{message: "not created", details: attrs.name}}
-      res -> res
-    end
+    Repo.insert(user, preload: :preferences)
   end
 
   @doc """
-  Return a tagged tuple with {:ok, update_attributes} or {:error, message}
+  Return a tagged tuple with {:ok, update_attributes} or error
+  tuple (possibly from Ecto)
   """
   def update_user(id, attrs) do
     with {:ok, user} <- get_by_id(id),
@@ -68,22 +68,21 @@ defmodule GraphqlApi.Users do
            User.changeset(user, attrs)
            |> Repo.update() do
       {:ok, user}
-    else
-      _ -> {:error, %{message: "not updated", details: id}}
     end
   end
 
   @doc """
-  Return a tagged tuple with {:ok, updated_preferences} or {:error, message}
+  Return a tagged tuple with {:ok, updated_preferences} or {error
+  tuple (possibly from Ecto)
   """
   def update_prefs(id, attrs) do
     with query <- Preference.get_by(:user_id, id),
-         current_prefs <- Repo.one(query),
+         %Preference{} = current_prefs <- Repo.one(query),
          changeset <- Preference.changeset(current_prefs, attrs),
          {:ok, new_prefs} <- Repo.update(changeset) do
       {:ok, new_prefs}
     else
-      {:error, _err} -> {:error, %{message: "not updated", details: id}}
+      _ -> {:error, not_found("id: not found", %{details: %{id: id}})}
     end
   end
 

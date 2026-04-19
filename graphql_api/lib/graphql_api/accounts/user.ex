@@ -18,6 +18,7 @@ defmodule GraphqlApi.Accounts.User do
     user
     |> cast(attrs, [:name, :email])
     |> validate_required([:name, :email])
+    |> validate_format(:email, ~r/@/)
     |> cast_assoc(:preferences, on_replace: :update)
     |> unique_constraint(:email, message: "invalid email address")
   end
