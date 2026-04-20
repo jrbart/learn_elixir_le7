@@ -185,6 +185,7 @@ defmodule GraphqlApiWeb.Schema.QueriesTest do
     end
 
     test "different keys have different counters" do
+      _ = :test_key
       res1 = Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "testKey"})
       assert {:ok, %{data: %{"resolverHits" => hits1}}} = res1
       res2 = Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "resolverHits"})

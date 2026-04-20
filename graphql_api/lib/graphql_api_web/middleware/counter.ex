@@ -5,6 +5,8 @@ defmodule GraphqlApiWeb.Middleware.Counter do
     resolution
     |> Absinthe.Resolution.path()
     |> List.first()
+    |> Absinthe.Adapter.LanguageConventions.to_internal_name(nil)
+    |> String.to_existing_atom()
     |> GraphqlApi.HitCounter.increment()
 
     resolution

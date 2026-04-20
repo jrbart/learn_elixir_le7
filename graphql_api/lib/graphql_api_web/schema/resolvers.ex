@@ -29,7 +29,10 @@ defmodule GraphqlApiWeb.Schema.Resolvers do
   end
 
   def get_hit_counter(hit, _) do
-    res = GraphqlApi.HitCounter.value(hit.key)
+    res = hit.key
+      |> Absinthe.Adapter.LanguageConventions.to_internal_name(nil)
+      |> String.to_existing_atom()
+      |> GraphqlApi.HitCounter.value()
     {:ok, res}
   end
 end

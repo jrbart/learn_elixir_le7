@@ -19,7 +19,7 @@ defmodule GraphqlApi.Application do
       # Start to serve requests, typically the last entry
       GraphqlApiWeb.Endpoint,
       {Absinthe.Subscription, pubsub: GraphqlApiWeb.Endpoint},
-      {GraphqlApi.HitCounter, %{}}
+      {GraphqlApi.HitCounter, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
