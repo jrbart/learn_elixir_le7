@@ -186,19 +186,22 @@ defmodule GraphqlApiWeb.Schema.QueriesTest do
 
     test "different keys have different counters" do
       _ = :test_key
-      res1 = Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "testKey"})
-      assert {:ok, %{data: %{"resolverHits" => hits1}}} = res1
-      res2 = Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "resolverHits"})
-      assert {:ok, %{data: %{"resolverHits" => hits2}}} = res2
-      res3 = Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "testKey"})
-      assert {:ok, %{data: %{"resolverHits" => hits3}}} = res3
-      res4 = Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "resolverHits"})
-      assert {:ok, %{data: %{"resolverHits" => hits4}}} = res4
+      # Get starting values for two different counters
+      res = Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "testKey"})
+      assert {:ok, %{data: %{"resolverHits" => t_hits_before}}} = res
+      res = Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "resolverHits"})
+      assert {:ok, %{data: %{"resolverHits" => r_hits_before}}} = res
+      # First one should stay the same because we have NOT used that endpoint,
+      # second one should have increased because we DID use it
+      res = Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "testKey"})
+      assert {:ok, %{data: %{"resolverHits" => t_hits_after}}} = res
+      res = Absinthe.run(@resolver_hits_doc, Schema, variables: %{"key" => "resolverHits"})
+      assert {:ok, %{data: %{"resolverHits" => r_hits_after}}} = res
 
-      # Checking the counter does not increase the counter for the key
-      assert hits1 == hits3
+      # Checking the counter does not increase the counter for testKey
+      assert t_hits_before == t_hits_after
       # But it does increase the counter for 'resolverHits'
-      assert hits2 < hits4
+      assert r_hits_before < r_hits_after
     end
   end
 end

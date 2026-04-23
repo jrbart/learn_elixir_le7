@@ -4,6 +4,8 @@ defmodule GraphqlApiWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    # TODO pass secret key
+    plug GraphqlApiWeb.AuthPlug
   end
 
   scope "/" do

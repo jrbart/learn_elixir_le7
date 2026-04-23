@@ -13,8 +13,11 @@ defmodule GraphqlApiWeb.SubscriptionCase do
       use Absinthe.Phoenix.SubscriptionTest,
         schema: GraphqlApiWeb.Schema
 
-      setup do
-        {:ok, socket} = Phoenix.ChannelTest.connect(GraphqlApiWeb.UserSocket, %{})
+      setup context do
+        # Assume all tests are running with admin role
+        socket_params = Map.get(context, :socket_params, %{role: :admin})
+
+        {:ok, socket} = Phoenix.ChannelTest.connect(GraphqlApiWeb.UserSocket, socket_params)
         {:ok, socket} = Absinthe.Phoenix.SubscriptionTest.join_absinthe(socket)
 
         {:ok, %{socket: socket}}

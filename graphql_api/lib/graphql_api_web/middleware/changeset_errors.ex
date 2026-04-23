@@ -1,5 +1,7 @@
 defmodule GraphqlApiWeb.Middleware.ChangesetErrors do
   @behaviour Absinthe.Middleware
+
+  @impl Absinthe.Middleware
   def call(resolution, _term) do
     %{resolution | errors: Enum.flat_map(resolution.errors, &handle_error/1)}
   end

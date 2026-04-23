@@ -16,8 +16,10 @@ defmodule GraphqlApiWeb.Schema do
     [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults()]
   end
 
-  def middleware(middleware, _field, %Absinthe.Type.Object{identifier: identifier})
+  def middleware(middleware, field, %Absinthe.Type.Object{identifier: identifier})
       when identifier in [:query, :subscription, :mutation] do
+    SharedUtils.Logger.debug(__MODULE__, "Found KEY #{field.name}")
+
     case identifier do
       :mutation ->
         [GraphqlApiWeb.Middleware.Counter | middleware] ++

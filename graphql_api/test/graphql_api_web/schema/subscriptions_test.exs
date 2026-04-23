@@ -37,6 +37,7 @@ defmodule GraphqlApiWeb.Schema.SubscriptionsTest do
   """
 
   describe "@createdUser" do
+    @tag authed: true
     test "gets triggered by @creatUser mutations", %{socket: socket} do
       # subscribe
       ref = push_doc(socket, @created_user_doc)

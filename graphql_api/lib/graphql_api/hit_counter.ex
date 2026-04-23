@@ -6,6 +6,7 @@ defmodule GraphqlApi.HitCounter do
   end
 
   def value(key) do
+    SharedUtils.Logger.info(__MODULE__, "GET #{key}")
     Agent.get(__MODULE__, &Keyword.get(&1, key, 0))
   end
 

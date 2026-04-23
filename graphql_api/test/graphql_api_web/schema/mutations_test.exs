@@ -29,7 +29,14 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
     test "creates user" do
       name = "test"
       email = "test@example.com"
-      res = Absinthe.run(@user_doc1, Schema, variables: %{"name" => name, "email" => email})
+
+      res =
+        Absinthe.run(@user_doc1, Schema,
+          context: %{"role" => :admin},
+          variables: %{"name" => name, "email" => email}
+        )
+
+      SharedUtils.Logger.debug(__MODULE__, Kernel.inspect(res))
 
       # check GraphQL response
       assert {:ok, %{data: %{"createUser" => user}}} = res
@@ -42,7 +49,12 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
 
     test "fails if missing email" do
       name = "test"
-      res = Absinthe.run(@user_doc1, Schema, variables: %{"name" => name})
+
+      res =
+        Absinthe.run(@user_doc1, Schema,
+          context: %{"role" => :admin},
+          variables: %{"name" => name}
+        )
 
       assert {:ok, %{errors: [%{message: error}]}} = res
       assert "email: can't be blank" = error
@@ -51,8 +63,18 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
     test "fails if duplicate email" do
       name = "test"
       email = "test@example.com"
-      _res = Absinthe.run(@user_doc1, Schema, variables: %{"name" => name, "email" => email})
-      res = Absinthe.run(@user_doc1, Schema, variables: %{"name" => name, "email" => email})
+
+      _res =
+        Absinthe.run(@user_doc1, Schema,
+          context: %{"role" => :admin},
+          variables: %{"name" => name, "email" => email}
+        )
+
+      res =
+        Absinthe.run(@user_doc1, Schema,
+          context: %{"role" => :admin},
+          variables: %{"name" => name, "email" => email}
+        )
 
       assert {:ok, %{errors: [%{message: error}]}} = res
       assert "email: invalid email address" = error
@@ -76,6 +98,7 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
 
       assert {:ok, %{data: data}} =
                Absinthe.run(@user_doc2, Schema,
+                 context: %{"role" => :admin},
                  variables: %{
                    "id" => user.id,
                    "name" => "new_name",
@@ -97,6 +120,7 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
 
       assert res =
                Absinthe.run(@user_doc2, Schema,
+                 context: %{"role" => :admin},
                  variables: %{
                    "id" => user_id,
                    "name" => "new_name",
@@ -115,6 +139,7 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
 
       assert res =
                Absinthe.run(@user_doc2, Schema,
+                 context: %{"role" => :admin},
                  variables: %{
                    "id" => user.id,
                    "name" => "new_name",
@@ -150,6 +175,7 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
 
       assert {:ok, %{data: data}} =
                Absinthe.run(@user_doc3, Schema,
+                 context: %{"role" => :admin},
                  variables: %{
                    "id" => user.id,
                    "emails" => true
@@ -166,6 +192,7 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
 
       assert {:ok, %{data: data}} =
                Absinthe.run(@user_doc3, Schema,
+                 context: %{"role" => :admin},
                  variables: %{
                    "id" => user.id,
                    "emails" => true,
@@ -191,6 +218,7 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
 
       assert res =
                Absinthe.run(@user_doc3, Schema,
+                 context: %{"role" => :admin},
                  variables: %{
                    "id" => user_id,
                    "emails" => true
