@@ -6,21 +6,21 @@ Error System
 
 Our Error system should have the following methods:
 
-'''
+```
 ErrorUtils.not_found("message", %{details: "here"})
 ErrorUtils.internal_server_error_found("message", %{details: "here"})
 ErrorUtils.not_acceptable("message", %{details: "here"})
 ErrorUtils.conflict("message", %{details: "here"})
-'''
+```
 
 For the `user(id: 1)` query we have, let's return one of these errors if the user isn't found, it should return
 
-'''
+```
 %{
   code: :not_found,
   details: %{id: id}
 }
-'''
+```
 
 If we can also write tests for this module that would be great
 
