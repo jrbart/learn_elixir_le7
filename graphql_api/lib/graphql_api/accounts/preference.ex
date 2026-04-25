@@ -25,7 +25,6 @@ defmodule GraphqlApi.Accounts.Preference do
   # Reusable queries from https://learn-elixir.dev/blogs/creating-reusable-ecto-code
   def from(query \\ Preference), do: from(query, as: :preferences)
 
-  # BAD NAME -- maybe "compose"?
   def compose(query \\ from(), key, value)
 
   # order results w EctoShorts
