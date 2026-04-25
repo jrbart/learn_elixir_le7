@@ -26,15 +26,15 @@ defmodule GraphqlApi.Accounts.Preference do
   def from(query \\ Preference), do: from(query, as: :preferences)
 
   # BAD NAME -- maybe "compose"?
-  def get_by(query \\ from(), key, value)
+  def compose(query \\ from(), key, value)
 
   # order results w EctoShorts
-  def get_by(query, :after, value), do: CF.convert_params_to_filter(query, %{after: value})
-  def get_by(query, :before, value), do: CF.convert_params_to_filter(query, %{before: value})
-  def get_by(query, :first, value), do: CF.convert_params_to_filter(query, %{first: value})
+  def compose(query, :after, value), do: CF.convert_params_to_filter(query, %{after: value})
+  def compose(query, :before, value), do: CF.convert_params_to_filter(query, %{before: value})
+  def compose(query, :first, value), do: CF.convert_params_to_filter(query, %{first: value})
 
   # filter results by field
-  def get_by(query, key, value) do
+  def compose(query, key, value) do
     where(query, [preferences: p], field(p, ^key) == ^value)
   end
 end

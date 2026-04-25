@@ -42,7 +42,7 @@ defmodule GraphqlApi.Users do
   def get_by_prefs(prefs) do
     users =
       for {key, value} <- prefs, reduce: User.join_preferences() do
-        query -> Preference.get_by(query, key, value)
+        query -> Preference.compose(query, key, value)
       end
       |> Repo.all()
 
@@ -76,7 +76,7 @@ defmodule GraphqlApi.Users do
   tuple (possibly from Ecto)
   """
   def update_prefs(id, attrs) do
-    with query <- Preference.get_by(:user_id, id),
+    with query <- Preference.compose(:user_id, id),
          %Preference{} = current_prefs <- Repo.one(query),
          changeset <- Preference.changeset(current_prefs, attrs),
          {:ok, new_prefs} <- Repo.update(changeset) do
