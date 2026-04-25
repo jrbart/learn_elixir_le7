@@ -230,4 +230,25 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
       assert "id: not found" = error
     end
   end
+
+  describe "@Authheader" do
+    test "mutations should fail if the auth token is not supplied" do
+      name = "test"
+      email = "test@example.com"
+
+      res =
+        Absinthe.run(@user_doc1, Schema,
+          variables: %{"name" => name, "email" => email}
+        )
+
+      SharedUtils.Logger.debug(__MODULE__, Kernel.inspect(res))
+
+      # check GraphQL response looks like:
+      # %{data: %{"createUser" => nil}, errors: [%{code: :not_acceptable, ...}]}}
+      assert {:ok, %{errors: errors}} = res
+      assert [%{code: :not_acceptable} | _] = errors
+
+    end
+  end
+
 end

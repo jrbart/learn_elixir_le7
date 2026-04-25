@@ -21,6 +21,6 @@ defmodule GraphqlApiWeb.AuthPlug do
   end
 
   defp authorize?(token) do
-    token == ["Imsecret"]
+    {:ok, token} == Application.fetch_env(GraphqlApiWeb.AuthPlug, :token)
   end
 end
