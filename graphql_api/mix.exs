@@ -55,7 +55,10 @@ defmodule GraphqlApi.MixProject do
 
       # Good practices
       {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
-      {:credo, "~> 1.7", only: :dev}
+      {:credo, "~> 1.7", only: :dev},
+
+      # Dev tools 
+      {:igniter, "~> 0.6", only: [:dev, :test]}
     ]
   end
 
