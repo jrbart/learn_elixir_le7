@@ -13,11 +13,13 @@ to an aggregate of all hits to that resolver. This should be stored inside a pro
 data. It should store data in the format of:
 
 %{"create_user" => 10}
+
 To view this data, we're going to create a GraphQL query for viewing a resolver's hits:
 
 query {
   resolverHits(key: "create_user")
 }
+
 Hint: Because field returns are types, we can specify :integer as a return type.
 
 Lastly, we're going to write integration tests for all your queries, mutations, and subscriptions,
