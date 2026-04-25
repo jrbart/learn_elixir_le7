@@ -11,16 +11,17 @@ defmodule GraphqlApiWeb.AuthPlug do
   end
 
   def build_context(conn) do
-    with token <- get_req_header(conn, "authorization"),
-         true <- authorize?(token) do
+    with [token] <- get_req_header(conn, "x-auth"),
+         true <- IO.inspect(authorize?(token)) do
       SharedUtils.Logger.debug(__MODULE__, "Auth header detected")
-      %{role: :admin}
+      %{"role" => :admin}
     else
-      _ -> %{}
+        _ ->   %{}
     end
   end
 
   defp authorize?(token) do
-    {:ok, token} == Application.fetch_env(GraphqlApiWeb.AuthPlug, :token)
+    {:ok, config} = Application.fetch_env(:graphql_api, GraphqlApiWeb.AuthPlug)
+    token == config[:token]
   end
 end
