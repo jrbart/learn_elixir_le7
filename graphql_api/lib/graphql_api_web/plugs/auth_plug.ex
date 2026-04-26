@@ -12,11 +12,11 @@ defmodule GraphqlApiWeb.AuthPlug do
 
   def build_context(conn) do
     with [token] <- get_req_header(conn, "x-auth"),
-         true <- IO.inspect(authorize?(token)) do
+         true <- authorize?(token) do
       SharedUtils.Logger.debug(__MODULE__, "Auth header detected")
       %{"role" => :admin}
     else
-        _ ->   %{}
+      _ -> %{}
     end
   end
 

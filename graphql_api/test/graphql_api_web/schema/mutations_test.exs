@@ -237,9 +237,7 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
       email = "test@example.com"
 
       res =
-        Absinthe.run(@user_doc1, Schema,
-          variables: %{"name" => name, "email" => email}
-        )
+        Absinthe.run(@user_doc1, Schema, variables: %{"name" => name, "email" => email})
 
       SharedUtils.Logger.debug(__MODULE__, Kernel.inspect(res))
 
@@ -247,8 +245,6 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
       # %{data: %{"createUser" => nil}, errors: [%{code: :not_acceptable, ...}]}}
       assert {:ok, %{errors: errors}} = res
       assert [%{code: :not_acceptable} | _] = errors
-
     end
   end
-
 end
