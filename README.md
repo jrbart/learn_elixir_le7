@@ -58,9 +58,9 @@ Distribution Setup
 We’re going to scale our server by adding nodes. Use LibCluster for
 this, and set up two nodes in development:
 
--_ node_a@localhost _
+- _ node_a@localhost _
 
--_ node_b@localhost _
+- _ node_b@localhost _
 
 
 Optional Challenge
@@ -68,9 +68,9 @@ Optional Challenge
 
 If you’re up for an extra challenge:
 
-    Allow specific user tokens to be passed through.
+- Allow specific user tokens to be passed through.
 
-    Create a query to return the current user for a given token.
+- Create a query to return the current user for a given token.
 
 
 Make sure you delete the _build and deps folder
