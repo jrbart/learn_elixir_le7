@@ -37,19 +37,19 @@ GQL Modifications
 With auth tokens being generated, we need a way to retrieve them for
 users using GraphQL. Here’s what we’ll do:
 
-1. Add an _auth_token_ field to the _User_ type, which will return the token
+1. Add an `auth_token` field to the `User` type, which will return the token
 from our cache for the specified user.
 
 Add a subscription:
 
-````
+```elixir
 subscription {
 userAuthToken(user_id: String!): String
 }
-````
+```
 
 This subscription will trigger whenever a new token is generated for a
-specific _user_id_.
+specific `user_id`.
 
 
 Distribution Setup
@@ -58,9 +58,9 @@ Distribution Setup
 We’re going to scale our server by adding nodes. Use LibCluster for
 this, and set up two nodes in development:
 
-- _ node_a@localhost _
+- `node_a@localhost`
 
-- _ node_b@localhost _
+- `node_b@localhost`
 
 
 Optional Challenge
