@@ -58,9 +58,9 @@ Distribution Setup
 We’re going to scale our server by adding nodes. Use LibCluster for
 this, and set up two nodes in development:
 
-    _node_a@localhost_
+    _ node_a@localhost _
 
-    _node_b@localhost_
+    _ node_b@localhost _
 
 
 Optional Challenge
