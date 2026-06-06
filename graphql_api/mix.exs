@@ -49,6 +49,7 @@ defmodule GraphqlApi.MixProject do
       {:absinthe_plug, "~> 1.5"},
       {:absinthe_phoenix, "~> 2.0"},
       {:ecto_shorts, "~> 2.4"},
+      {:gen_stage, "~> 1.3"},
 
       # Testing
       {:mimic, "~> 2.0", only: [:dev, :test]},
