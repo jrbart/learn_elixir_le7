@@ -1,13 +1,14 @@
 defmodule AuthPipe do
-  alias GraphqlApi.AuthPipe.UserTokenBroadcast
-  alias GraphqlApi.AuthPipe.UserTokenPermanent
-  alias GraphqlApi.AuthPipe.{UserProducer, UserToken, UserSpew}
+  alias GraphqlApi.AuthPipe.UserTokenBareExample
+  alias GraphqlApi.AuthPipe.UserTokenNotify
+  alias GraphqlApi.AuthPipe.UserTokenPersist
+  alias GraphqlApi.AuthPipe.{UserProducer, UserToken}
 
   def run() do
     UserProducer.start_link(:ok, [])
     UserToken.start_link(:ok)
-    UserSpew.start_link(:ok)
-    UserTokenPermanent.start_link(:ok)
-    UserTokenBroadcast.start_link(:ok)
+    UserTokenBareExample.start_link(:ok)
+    UserTokenNotify.start_link(:ok)
+    UserTokenPersist.start_link(:ok)
   end
 end

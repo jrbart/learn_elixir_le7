@@ -1,4 +1,4 @@
-defmodule GraphqlApi.AuthPipe.UserTokenPermanent do
+defmodule GraphqlApi.AuthPipe.UserTokenNotify do
   use GenStage
 
   def start_link(_opts) do
@@ -6,11 +6,11 @@ defmodule GraphqlApi.AuthPipe.UserTokenPermanent do
   end
 
   def init(:ok) do
-    {:consumer, :nop, subscribe_to: [{GraphqlApi.AuthPipe.UserToken, max_demand: 50}]}
+    {:consumer, :nop, subscribe_to: [{GraphqlApi.AuthPipe.UserToken, max_demand: 30}]}
   end
 
   def handle_events(events, _from, state) do
-    IO.inspect(events, label: "Store EVENTS")
+    IO.inspect(events, label: "Broadcast EVENTS")
     {:noreply, [], state}
   end
 end

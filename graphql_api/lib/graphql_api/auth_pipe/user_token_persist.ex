@@ -1,4 +1,4 @@
-defmodule GraphqlApi.AuthPipe.UserSpew do
+defmodule GraphqlApi.AuthPipe.UserTokenPersist do
   use GenStage
 
   def start_link(_opts) do
@@ -10,7 +10,7 @@ defmodule GraphqlApi.AuthPipe.UserSpew do
   end
 
   def handle_events(events, _from, state) do
-    IO.inspect(events, label: "Spew EVENTS")
+    IO.inspect(events, label: "Store EVENTS")
     {:noreply, [], state}
   end
 end
