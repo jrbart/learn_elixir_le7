@@ -23,8 +23,11 @@ config :swoosh, :api_client, false
 # Get LOG_LEVEL from environment, default to warning
 log_level = System.get_env("LOG_LEVEL", "warning") |> String.to_atom()
 
-config :logger,
-  level: log_level
+
+
+config :logger, :console,
+  level: log_level,
+  colors: [enabled: true, debug: :cyan, error: :red, info: :normal] # Set ANSI colors to be on when piping to less or more 
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime

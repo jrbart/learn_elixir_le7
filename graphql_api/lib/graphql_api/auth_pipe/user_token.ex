@@ -11,7 +11,12 @@ defmodule GraphqlApi.AuthPipe.UserToken do
   end
 
   def init(state) do
-    {:producer_consumer, state, subscribe_to: [GraphqlApi.AuthPipe.UserProducer], dispatcher: GenStage.BroadcastDispatcher}
+    { :producer_consumer, state, 
+      subscribe_to: [{GraphqlApi.AuthPipe.UserProducer, 
+        min_demand: 1,
+        max_demand: 4}],
+      dispatcher: GenStage.BroadcastDispatcher
+    }
   end
 
   def handle_events(events, _from, state) do
