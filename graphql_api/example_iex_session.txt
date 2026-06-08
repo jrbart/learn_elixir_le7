@@ -1,0 +1,95 @@
+iiex(6)> recompile
+Compiling 1 file (.ex)
+Generated graphql_api app
+:ok
+iex(7)> AuthPipe.run
+{:error, {:already_started, #PID<0.567.0>}}
+
+# forgot to stop GenStage between runs ...
+
+iex(13)> GenStage.stop(UserProducer)
+:ok
+[notice] GenStage consumer GraphqlApi.AuthPipe.UserToken is stopping after receiving cancel from producer #PID<0.563.0> with reason: :normal
+
+[notice] GenStage consumer GraphqlApi.AuthPipe.UserSpew is stopping after receiving cancel from producer #PID<0.564.0> with reason: :normal
+
+[notice] GenStage consumer GraphqlApi.AuthPipe.UserTokenBroadcast is stopping after receiving cancel from producer #PID<0.564.0> with reason: :normal
+
+[notice] GenStage consumer GraphqlApi.AuthPipe.UserTokenPermanent is stopping after receiving cancel from producer #PID<0.564.0> with reason: :normal
+
+iex(14)> AuthPipe.run
+[debug] QUERY OK source="users" db=1.9ms idle=1606.4ms
+SELECT u0."id", u0."name", u0."email" FROM "users" AS u0 []
+[debug] QUERY OK source="preferences" db=0.4ms idle=1608.6ms
+SELECT p0."likes_emails", p0."likes_phone_calls", p0."likes_faxes", p0."user_id", p0."user_id" FROM "preferences" AS p0 WHERE (p0."user_id" = ANY($1)) [[16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 2, 1]]
+{:ok, #PID<0.594.0>}
+iex(15)> GenStage.demand(UserProducer,:forward)
+:ok
+[info] [Elixir.GraphqlApi.AuthPipe.UserProducer] Received DEMAND: 4
+[info] [Elixir.GraphqlApi.AuthPipe.UserToken] Received 3 events
+Broadcast EVENTS: [
+  {1, "695AB536AF8ED79803860B51"},
+  {2, "1285807409671035407777FC"},
+  {6, "ED24A1C3DE63716D6FC6CE7D"}
+]
+Store EVENTS: [
+  {1, "695AB536AF8ED79803860B51"},
+  {2, "1285807409671035407777FC"},
+  {6, "ED24A1C3DE63716D6FC6CE7D"}
+]
+Spew EVENTS: [
+  {1, "695AB536AF8ED79803860B51"},
+  {2, "1285807409671035407777FC"},
+  {6, "ED24A1C3DE63716D6FC6CE7D"}
+]
+[info] [Elixir.GraphqlApi.AuthPipe.UserToken] Received 1 events
+Broadcast EVENTS: [{7, "09488182F68D0B7E35D16610"}]
+Spew EVENTS: [{7, "09488182F68D0B7E35D16610"}]
+Store EVENTS: [{7, "09488182F68D0B7E35D16610"}]
+[info] [Elixir.GraphqlApi.AuthPipe.UserProducer] Received DEMAND: 3
+Broadcast EVENTS: [
+  {8, "C741E502D4CBB646AA784A48"},
+  {9, "4F58B4EDEA44806B774E66EE"},
+  {10, "9C4A9EA6261D6ADAD09D5C5E"}
+]
+Store EVENTS: [
+  {8, "C741E502D4CBB646AA784A48"},
+  {9, "4F58B4EDEA44806B774E66EE"},
+  {10, "9C4A9EA6261D6ADAD09D5C5E"}
+]
+[info] [Elixir.GraphqlApi.AuthPipe.UserToken] Received 3 events
+Spew EVENTS: [
+  {8, "C741E502D4CBB646AA784A48"},
+  {9, "4F58B4EDEA44806B774E66EE"},
+  {10, "9C4A9EA6261D6ADAD09D5C5E"}
+]
+Broadcast EVENTS: [
+  {11, "48AC3C30DF72BCC6D05785C5"},
+  {12, "A27FA54F3066BF8ED1C59390"},
+  {13, "93E3724034FFCBE94420931F"}
+]
+[info] [Elixir.GraphqlApi.AuthPipe.UserProducer] Received DEMAND: 4
+Store EVENTS: [
+  {11, "48AC3C30DF72BCC6D05785C5"},
+  {12, "A27FA54F3066BF8ED1C59390"},
+  {13, "93E3724034FFCBE94420931F"}
+]
+Spew EVENTS: [
+  {11, "48AC3C30DF72BCC6D05785C5"},
+  {12, "A27FA54F3066BF8ED1C59390"},
+  {13, "93E3724034FFCBE94420931F"}
+]
+[info] [Elixir.GraphqlApi.AuthPipe.UserToken] Received 3 events
+Broadcast EVENTS: [{14, "AEFCF9E656EF0BD17FF0E8EF"}]
+Store EVENTS: [{14, "AEFCF9E656EF0BD17FF0E8EF"}]
+[info] [Elixir.GraphqlApi.AuthPipe.UserToken] Received 1 events
+Spew EVENTS: [{14, "AEFCF9E656EF0BD17FF0E8EF"}]
+Broadcast EVENTS: [{15, "6C87BA7BF43DB62FB72B4703"}, {16, "DFF3B36A5CF336A3716D7061"}]
+[info] [Elixir.GraphqlApi.AuthPipe.UserProducer] Received DEMAND: 3
+Store EVENTS: [{15, "6C87BA7BF43DB62FB72B4703"}, {16, "DFF3B36A5CF336A3716D7061"}]
+Spew EVENTS: [{15, "6C87BA7BF43DB62FB72B4703"}, {16, "DFF3B36A5CF336A3716D7061"}]
+[info] [Elixir.GraphqlApi.AuthPipe.UserProducer] Shut down gracefully
+[info] [Elixir.GraphqlApi.AuthPipe.UserProducer] Producer hibernating
+[info] [Elixir.GraphqlApi.AuthPipe.UserToken] Received 2 events
+[info] [Elixir.GraphqlApi.AuthPipe.UserProducer] No more Users
+iex(16)>

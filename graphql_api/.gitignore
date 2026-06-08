@@ -26,7 +26,7 @@ erl_crash.dump
 graphql_api-*.tar
 
 # Ignore the LS server cache
-/elixir_ls/
+/.elixir_ls/
 
 # Ignore nvim session file
 /session
