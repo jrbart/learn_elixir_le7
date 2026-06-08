@@ -1,0 +1,30 @@
+import Config
+
+config :graphql_api, GraphqlApi.Repo,
+  database: "graphql_api_test",
+  username: "postgres",
+  hostname: "localhost"
+
+# We don't run a server during test. If one is required,
+# you can enable the server option below.
+config :graphql_api, GraphqlApiWeb.Endpoint,
+  http: [ip: {127, 0, 0, 1}, port: 4002],
+  secret_key_base: "oIORKFNuMqt6mCttvCCaoWC6r71J2EgShZ9KsM92+LpsZ6Dtuo3t2M1mc5L+CWHe",
+  server: false
+
+config :graphql_api, GraphqlApi.Repo, pool: Ecto.Adapters.SQL.Sandbox
+
+# In test we don't send emails
+config :graphql_api, GraphqlApi.Mailer, adapter: Swoosh.Adapters.Test
+
+# Disable swoosh api client as it is only required for production adapters
+config :swoosh, :api_client, false
+
+# Get LOG_LEVEL from environment, default to warning
+log_level = System.get_env("LOG_LEVEL", "warning") |> String.to_atom()
+
+config :logger,
+  level: log_level
+
+# Initialize plugs at runtime for faster test compilation
+config :phoenix, :plug_init_mode, :runtime
