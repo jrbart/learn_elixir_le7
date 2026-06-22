@@ -2,7 +2,6 @@ defmodule GraphqlApi.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query
-  alias Hex.API.User
   alias GraphqlApi.Accounts.Preference
   alias __MODULE__
 

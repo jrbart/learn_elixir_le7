@@ -10,7 +10,11 @@ defmodule GraphqlApi.AuthPipe.UserTokenNotify do
   end
 
   def handle_events(events, _from, state) do
-    IO.inspect(events, label: "Broadcast EVENTS")
+    SharedUtils.Logger.info(__MODULE__, "Received #{Enum.count(events)} events")
+    for {user, token} <- events do
+      SharedUtils.Logger.debug(__MODULE__, "Sending notify #{user} #{token}}")
+      GraphqlApi.Users.notify(user,token)
+    end
     {:noreply, [], state}
   end
 end

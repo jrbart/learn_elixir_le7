@@ -11,6 +11,7 @@ defmodule GraphqlApi.AuthPipe.UserToken do
   end
 
   def init(state) do
+    Process.flag(:trap_exit, true)
     { :producer_consumer, state, 
       subscribe_to: [{GraphqlApi.AuthPipe.UserProducer, 
         min_demand: 1,
@@ -19,11 +20,12 @@ defmodule GraphqlApi.AuthPipe.UserToken do
     }
   end
 
+  @doc "Get a batch of user ids and generate tokens"
   def handle_events(events, _from, state) do
-    SharedUtils.Logger.info(__MODULE__, "Received #{Enum.count(events)} events")
     res =
-      for event <- events do
-        {event, gen_token()}
+      for user <- events do
+        SharedUtils.Logger.info(__MODULE__, "Generate user #{user} token")
+        {user, gen_token()}
       end
 
     {:noreply, res, state}

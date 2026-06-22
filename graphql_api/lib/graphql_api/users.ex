@@ -8,6 +8,7 @@ defmodule GraphqlApi.Users do
     suitable for Absinthe.
   """
   alias GraphqlApi.Accounts.User
+  alias GraphqlApi.Accounts.UserToken
   alias GraphqlApi.Accounts.Preference
   alias GraphqlApi.Repo
   alias EctoShorts.Actions
@@ -86,6 +87,17 @@ defmodule GraphqlApi.Users do
     end
   end
 
+  def update_token(user_id, token) do
+    with changeset <- UserToken.changeset(%UserToken{}, %{ user_id: user_id, token: token }) do
+      {:ok, UserToken.insert(changeset)}
+    end
+  end
+
+  #TODO
+  def notify(user, token) do
+    Absinthe.Subscription.publish(GraphqlApiWeb.Endpoint, token, [user_token: user])
+  end
+
   # Query for Dataloaddataer
   def data(),
     do: Dataloader.Ecto.new(Repo, query: &query/2)
@@ -93,4 +105,5 @@ defmodule GraphqlApi.Users do
   def query(queryable, _params) do
     queryable
   end
+
 end
