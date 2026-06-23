@@ -13,6 +13,7 @@ defmodule GraphqlApi.AuthPipe.UserTokenPersist do
     for {user, token} <- events do
       {:ok, _} = GraphqlApi.Users.update_token(user, token)
     end
+
     {:noreply, [], state}
   end
 end

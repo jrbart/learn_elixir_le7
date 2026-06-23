@@ -12,12 +12,11 @@ defmodule GraphqlApi.AuthPipe.UserToken do
 
   def init(state) do
     Process.flag(:trap_exit, true)
-    { :producer_consumer, state, 
-      subscribe_to: [{GraphqlApi.AuthPipe.UserProducer, 
-        min_demand: 1,
-        max_demand: 4}],
-      dispatcher: GenStage.BroadcastDispatcher
-    }
+    # Artificially set min/max demand small so we can see interaction between
+    # notify and persist consumers in our small data size...
+    {:producer_consumer, state,
+     subscribe_to: [{GraphqlApi.AuthPipe.UserProducer, min_demand: 1, max_demand: 4}],
+     dispatcher: GenStage.BroadcastDispatcher}
   end
 
   @doc "Get a batch of user ids and generate tokens"

@@ -41,7 +41,8 @@ config :graphql_api, GraphqlApi.Mailer, adapter: Swoosh.Adapters.Local
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id],
-  colors: [enabled: true, debug: :cyan, error: :red, info: :yellow] # Set ANSI colors to be on when piping to less or more 
+  # Set ANSI colors to be on when piping to less or more 
+  colors: [enabled: true, debug: :cyan, error: :red, info: :yellow]
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason

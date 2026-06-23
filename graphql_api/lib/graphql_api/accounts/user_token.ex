@@ -14,7 +14,7 @@ defmodule GraphqlApi.Accounts.UserToken do
   def insert(changeset) do
     Repo.insert(
       changeset,
-      on_conflict: {:replace, [ :token]},
+      on_conflict: {:replace, [:token]},
       conflict_target: :user_id
     )
   end

@@ -88,14 +88,14 @@ defmodule GraphqlApi.Users do
   end
 
   def update_token(user_id, token) do
-    with changeset <- UserToken.changeset(%UserToken{}, %{ user_id: user_id, token: token }) do
+    with changeset <- UserToken.changeset(%UserToken{}, %{user_id: user_id, token: token}) do
       {:ok, UserToken.insert(changeset)}
     end
   end
 
-  #TODO
+  # TODO
   def notify(user, token) do
-    Absinthe.Subscription.publish(GraphqlApiWeb.Endpoint, token, [user_token: user])
+    Absinthe.Subscription.publish(GraphqlApiWeb.Endpoint, token, user_token: user)
   end
 
   # Query for Dataloaddataer
@@ -105,5 +105,4 @@ defmodule GraphqlApi.Users do
   def query(queryable, _params) do
     queryable
   end
-
 end
