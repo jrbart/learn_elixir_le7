@@ -51,6 +51,16 @@ defmodule GraphqlApi.Users do
   end
 
   @doc """
+  Return a tagged tuple wih {:ok, token} or {:error, message}
+  """
+  def get_token_by_id(id) do
+    case Actions.find(UserToken, user_id: id) do
+      {:error, _ } -> {:error, not_found("id: not found", %{details: %{id: id}})}
+      token -> {:ok, token}
+    end
+  end
+
+  @doc """
   Return a tuple with {:ok, created_user} or Ecto error tuple
   """
   def create_user(attrs) do
@@ -87,9 +97,16 @@ defmodule GraphqlApi.Users do
     end
   end
 
+  @doc "Update or insert"
   def update_token(user_id, token) do
+    # According to Postgres documentation "on conflict" is more effecient than
+    # trying an update an then doing insert if it fails, plus it is atomic
     with changeset <- UserToken.changeset(%UserToken{}, %{user_id: user_id, token: token}) do
-      {:ok, UserToken.insert(changeset)}
+      Repo.insert(
+        changeset,
+        on_conflict: {:replace, [:token]},
+        conflict_target: :user_id
+      )
     end
   end
 

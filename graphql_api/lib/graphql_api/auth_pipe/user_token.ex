@@ -1,6 +1,10 @@
 defmodule GraphqlApi.AuthPipe.UserToken do
   use GenStage
 
+  # TODO
+  # move token generation into some sort of auth module 
+  # examine using phoenix gen.auth to satisfy this 
+
   def gen_token() do
     :rand.bytes(12)
     |> Base.encode16()

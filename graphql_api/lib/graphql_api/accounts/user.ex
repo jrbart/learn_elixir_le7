@@ -3,6 +3,7 @@ defmodule GraphqlApi.Accounts.User do
   import Ecto.Changeset
   import Ecto.Query
   alias GraphqlApi.Accounts.Preference
+  alias GraphqlApi.Accounts.UserToken
   alias __MODULE__
 
   schema "users" do
@@ -10,6 +11,7 @@ defmodule GraphqlApi.Accounts.User do
     field :email, :string
 
     has_one :preferences, Preference, on_replace: :update
+    has_one :token, UserToken
   end
 
   @doc false
