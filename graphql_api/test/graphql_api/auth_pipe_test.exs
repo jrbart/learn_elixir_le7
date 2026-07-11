@@ -14,7 +14,7 @@ defmodule GraphqlApi.AuthPipeTest do
     end
 
     test "creates and stores a user token", ctx do
-      :ok = AuthPipe.build([ctx.user_id])
+      :ok = AuthPipe.run([ctx.user_id])
 
       token = Users.get_token_by_id(ctx.user_id)
       refute is_nil(token)

@@ -5,7 +5,7 @@ defmodule GraphqlApi.AuthPipe do
   alias GraphqlApi.AuthPipe.{UserProducer, UserToken}
 
   @doc "build the GenStage pipeline for updating user auth tokens"
-  def build(users \\ nil) do
+  def run(users \\ nil) do
     users =
       case users do
         nil ->
