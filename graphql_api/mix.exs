@@ -52,7 +52,8 @@ defmodule GraphqlApi.MixProject do
       {:gen_stage, "~> 1.3"},
 
       # Testing
-      {:mimic, "~> 2.0", only: [:dev, :test]},
+      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:mimic, "~> 2.0", only: [:test]},
 
       # Good practices
       {:dialyxir, "~> 1.4", only: [:dev], runtime: false},

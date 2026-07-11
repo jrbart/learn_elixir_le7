@@ -6,7 +6,7 @@ defmodule GraphqlApi.AuthPipe.UserTokenNotify do
   end
 
   def init(:ok) do
-    {:consumer, :nop, subscribe_to: [{GraphqlApi.AuthPipe.UserToken, max_demand: 30}]}
+    {:consumer, :no_state, subscribe_to: [{GraphqlApi.AuthPipe.UserToken, max_demand: 30}]}
   end
 
   def handle_events(events, _from, state) do

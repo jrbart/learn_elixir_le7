@@ -1,14 +1,20 @@
-defmodule AuthPipe do
+defmodule GraphqlApi.AuthPipe do
   alias GraphqlApi.Users
   alias GraphqlApi.AuthPipe.UserTokenNotify
   alias GraphqlApi.AuthPipe.UserTokenPersist
   alias GraphqlApi.AuthPipe.{UserProducer, UserToken}
 
-  @doc "build the GenStage pipeline for creating/updating user auth tokens"
-  def build() do
+  @doc "build the GenStage pipeline for updating user auth tokens"
+  def build(users \\ nil) do
     users =
-      Users.all()
-      |> Enum.map(fn user -> user.id end)
+      case users do
+        nil ->
+          Users.all()
+          |> Enum.map(fn user -> user.id end)
+
+        _ ->
+          users
+      end
 
     # Producer is started with demand set to :accumulate 
     UserProducer.start_link(:ok, users)
