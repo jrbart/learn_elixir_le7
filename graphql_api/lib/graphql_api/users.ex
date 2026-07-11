@@ -55,7 +55,7 @@ defmodule GraphqlApi.Users do
   """
   def get_token_by_id(id) do
     case Actions.find(UserToken, user_id: id) do
-      {:error, _ } -> {:error, not_found("id: not found", %{details: %{id: id}})}
+      {:error, _} -> {:error, not_found("id: not found", %{details: %{id: id}})}
       token -> {:ok, token}
     end
   end

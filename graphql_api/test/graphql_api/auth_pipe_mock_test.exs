@@ -35,6 +35,7 @@ defmodule GraphqlApi.AuthPipeMockTest do
           {:noreply, [], []}
       end
     )
+
     :ok
   end
 

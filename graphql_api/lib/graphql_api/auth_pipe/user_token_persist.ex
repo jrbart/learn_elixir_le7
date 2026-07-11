@@ -11,6 +11,7 @@ defmodule GraphqlApi.AuthPipe.UserTokenPersist do
 
   def handle_events(events, _from, state) do
     SharedUtils.Logger.info(__MODULE__, "Received #{Enum.count(events)} events")
+
     for {user, token} <- events do
       {:ok, _} = GraphqlApi.Users.update_token(user, token)
     end
