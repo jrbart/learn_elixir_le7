@@ -88,9 +88,8 @@ defmodule GraphqlApi.Users do
   def update_prefs(id, attrs) do
     with query <- Preference.compose(:user_id, id),
          %Preference{} = current_prefs <- Repo.one(query),
-         changeset <- Preference.changeset(current_prefs, attrs),
-         {:ok, new_prefs} <- Repo.update(changeset) do
-      {:ok, new_prefs}
+         changeset <- Preference.changeset(current_prefs, attrs) do
+      Repo.update(changeset) 
     else
       _ -> {:error, not_found("id: not found", %{details: %{id: id}})}
     end
@@ -115,9 +114,11 @@ defmodule GraphqlApi.Users do
   end
 
   # Query for Dataloaddataer
+  @doc false
   def data(),
     do: Dataloader.Ecto.new(Repo, query: &query/2)
 
+  @doc false
   def query(queryable, _params) do
     queryable
   end
