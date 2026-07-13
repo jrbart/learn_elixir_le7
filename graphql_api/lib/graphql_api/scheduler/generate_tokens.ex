@@ -57,7 +57,7 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
     current_time = Time.utc_now()
     today_seconds = Time.to_seconds_after_midnight(current_time) |> elem(0)
     target_seconds = Time.to_seconds_after_midnight(next_run_time) |> elem(0)
-    seconds_to_wait = rem(@seconds_in_day - today_seconds + target_seconds, 86400)
+    seconds_to_wait = rem(@seconds_in_day - today_seconds + target_seconds, 86_400)
     SharedUtils.Logger.info(__MODULE__, "Seconds to wait: #{seconds_to_wait}")
     seconds_to_wait
    end 

@@ -74,11 +74,10 @@ defmodule GraphqlApi.Users do
   tuple (possibly from Ecto)
   """
   def update_user(id, attrs) do
-    with {:ok, user} <- get_by_id(id),
-         {:ok, user} <-
-           User.changeset(user, attrs)
-           |> Repo.update() do
-      {:ok, user}
+    with {:ok, user} <- get_by_id(id) do
+      user
+      |> User.changeset(attrs)
+      |> Repo.update()
     end
   end
 
