@@ -18,7 +18,10 @@ defmodule GraphqlApi.AuthPipe.UserProducer do
 
   @impl true
   def handle_demand(_demand, {0, []} = state) do
-    SharedUtils.Logger.info(__MODULE__, "Waiting for batch")
+    SharedUtils.Logger.info(__MODULE__, "Graceful shutdown")
+    # See this for graceful shutdown: 
+    # https://gen-stage.hexdocs.pm/GenStage.html#c:handle_demand/2-stopping-when-events-are-over
+    GenStage.async_info(self(), :last_user)
     # See this for explanation of hibernate
     # https://elixir.hexdocs.pm/GenServer.html#c:handle_call/3
     {:noreply, [], state, :hibernate}
