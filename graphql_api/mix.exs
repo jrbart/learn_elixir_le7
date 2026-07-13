@@ -73,7 +73,8 @@ defmodule GraphqlApi.MixProject do
   defp aliases do
     [
       setup: ["deps.get"],
-      "ecto.reset": ["ecto.drop", "ecto.create", "ecto.migrate", "run priv/repo/seed.exs"]
+      "ecto.reset": ["ecto.drop", "ecto.create", "ecto.migrate", "run priv/repo/seed.exs"],
+      check: ["dialyzer", "credo"]
     ]
   end
 end
