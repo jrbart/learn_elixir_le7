@@ -1,6 +1,9 @@
 defmodule GraphqlApi.AccountFactory do
   def build(:account) do
-    unique = Integer.to_string(System.unique_integer([:positive]))
+    unique =
+      [:positive]
+      |> System.unique_integer()
+      |> Integer.to_string()
 
     %{
       # id: String.to_integer(unique),
