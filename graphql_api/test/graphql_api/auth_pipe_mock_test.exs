@@ -17,12 +17,17 @@ defmodule GraphqlApi.AuthPipeMockTest do
   setup do
     # mock the handle_events calls to verify that they were called
     Mimic.expect(
-      GraphqlApi.AuthPipe.UserTokenNotify, # module to mock
-      :handle_events, # function to mock
-      1, # arity
-      fn # function to execute instead
+      # module to mock
+      GraphqlApi.AuthPipe.UserTokenNotify,
+      # function to mock
+      :handle_events,
+      # arity
+      1,
+      # function to execute instead
+      fn
         _, _, _ ->
-          {:noreply, [], []} # this is what handle_events returns
+          # this is what handle_events returns
+          {:noreply, [], []}
       end
     )
 
