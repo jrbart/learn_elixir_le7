@@ -1,4 +1,6 @@
 defmodule GraphqlApi.AuthPipe do
+  alias GraphqlApi.Accounts
+  alias GraphqlApi.Repo
   alias GraphqlApi.Users
   alias GraphqlApi.AuthPipe.UserTokenNotify
   alias GraphqlApi.AuthPipe.UserTokenPersist
@@ -6,6 +8,10 @@ defmodule GraphqlApi.AuthPipe do
 
   @doc "build the GenStage pipeline for updating user auth tokens"
   def run(users \\ nil) do
+
+    # This should be done with a transaction...
+    Repo.insert(%Accounts.Timestamps{timestamp:  DateTime.utc_now(:second)})
+    
     users =
       case users do
         nil ->
