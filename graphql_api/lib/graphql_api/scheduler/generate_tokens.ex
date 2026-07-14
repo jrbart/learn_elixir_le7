@@ -1,4 +1,5 @@
 defmodule GraphqlApi.Scheduler.GenerateTokens do
+  alias GraphqlApi.Accounts.Timestamps
   use GenServer
 
   @moduledoc """
@@ -18,16 +19,9 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
 
     # Check on startup if it has been more that 24 hours since
     # new tokens were generated
-    last_run = AuthPipe.last_run() 
-    last_time =
-      if is_nil(last_run) do 
-        DateTime.now!("Etc/UTC")
-      else 
-        last_run.timestamp
-      end
-    if DateTime.diff(DateTime.now!("Etc/UTC"), last_time, :hour) >= 24 do
-      Process.send(self(), :generate_new_tokens, [])
-    end
+    last_timestamp = AuthPipe.last_run() 
+    this_timesig = DateTime.now!("Etc/UTC")
+    maybe_run_pipeline(last_timestamp, this_timesig)
 
     {:ok, initial_state, {:continue, :schedule_next}}
   end
@@ -63,5 +57,17 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
     seconds_to_wait = rem(@seconds_in_day - today_seconds + target_seconds, 86_400)
     SharedUtils.Logger.info(__MODULE__, "Seconds to wait: #{seconds_to_wait}")
     seconds_to_wait
-   end 
+  end 
+    
+  def maybe_run_pipeline(nil, _) do 
+      Process.send(self(), :generate_new_tokens, [])
+  end
+
+  def maybe_run_pipeline(%Timestamps{} = prev, %DateTime{} = current) do
+    if DateTime.diff(prev.timestamp, current, :hour) >= 24 do
+      Process.send(self(), :generate_new_tokens, [])
+    end
+   
+  end
+   
 end

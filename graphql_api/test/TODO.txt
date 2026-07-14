@@ -1,0 +1,7 @@
+Right now, on app startup, it maybe_runs the AuthPipe and adds a timestamp
+that does not get deleted when the tests finish because it happens in the
+Application startup.  This makes the tests non-idempotent....
+
+We can architect around this.  I am leaving this note to remind myself to
+do so and to also write tests around the Scheduler module and the timestamps
+themselves.
