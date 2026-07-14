@@ -5,6 +5,8 @@ defmodule GraphqlApi.AuthPipe do
   alias GraphqlApi.AuthPipe.UserTokenNotify
   alias GraphqlApi.AuthPipe.UserTokenPersist
   alias GraphqlApi.AuthPipe.{UserProducer, UserToken}
+  alias GraphqlApi.Accounts.Timestamps
+  import Ecto.Query
 
   @doc "build the GenStage pipeline for updating user auth tokens"
   def run(users \\ nil) do
@@ -32,5 +34,9 @@ defmodule GraphqlApi.AuthPipe do
     # events through the pipeline and be sure that all Consumers will
     # receive all the Broadcast tokens
     GenStage.demand(UserProducer, :forward)
+  end
+
+  def last_run do
+    Repo.one(from(Timestamps, limit: 1, order_by: [desc: :timestamp]))
   end
 end

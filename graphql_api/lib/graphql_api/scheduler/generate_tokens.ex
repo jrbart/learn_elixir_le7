@@ -4,7 +4,6 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
   @moduledoc """
   A GenServer that runs once daily to re-generate all the user auth tokens
   """
-  alias GraphqlApi.Users
   alias GraphqlApi.AuthPipe
 
   @seconds_in_day 24*60*60
@@ -13,26 +12,30 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
     GenServer.start_link(__MODULE__, default, name: __MODULE__)
   end
 
-  # TODO
-  # We need to add some logic to check a timestamp to see if it has 
-  # been less than 24 hours since generating new tokens, 
-  # And also set a timer to wake up at appropriate time 
-  # to run each 24 hours
-
   @impl true
   def init(init) do
     initial_state = init
+
+    # Check on startup if it has been more that 24 hours since
+    # new tokens were generated
+    last_run = AuthPipe.last_run() 
+    last_time =
+      if is_nil(last_run) do 
+        DateTime.now!("Etc/UTC")
+      else 
+        last_run.timestamp
+      end
+    if DateTime.diff(DateTime.now!("Etc/UTC"), last_time, :hour) >= 24 do
+      Process.send(self(), :generate_new_tokens, [])
+    end
 
     {:ok, initial_state, {:continue, :schedule_next}}
   end
 
   @impl true
   def handle_info(:generate_new_tokens, state) do
-    users =
-      Users.all()
-      |> Enum.map(fn user -> user.id end)
 
-    AuthPipe.run(users)
+    AuthPipe.run()
     {:noreply, state, {:continue, :schedule_next}}
   end
 
