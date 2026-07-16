@@ -12,6 +12,7 @@ defmodule GraphqlApi.Scheduler do
 
   @impl true
   def init(_init_arg) do
+    SharedUtils.Logger.info(__MODULE__, "Supervisor starting...")
     children = [
       {GenerateTokens, 0}
     ]

@@ -15,6 +15,7 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
 
   @impl true
   def init(init) do
+    SharedUtils.Logger.info(__MODULE__, "Starting...")
     initial_state = init
 
     # Check on startup if it has been more that 24 hours since
@@ -28,6 +29,7 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
 
   @impl true
   def handle_info(:generate_new_tokens, state) do
+    SharedUtils.Logger.debug(__MODULE__, "Generating new tokens...")
 
     AuthPipe.run()
     {:noreply, state, {:continue, :schedule_next}}
@@ -35,6 +37,7 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
 
   @impl true
   def handle_continue(:schedule_next, state) do
+    SharedUtils.Logger.debug(__MODULE__, "Scheduling next run...")
     seconds_to_wait = next_run()
 
     Process.send_after(self(), :generate_new_tokens, seconds_to_wait * 1000)
@@ -43,7 +46,7 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
 
   # Helpers
 
-  def next_run do
+  def next_run() do
     config = Application.get_env(:graphql_api, __MODULE__)
     next_run_time = config[:daily_run]
     SharedUtils.Logger.info(__MODULE__, "Daily run time: #{next_run_time}")
@@ -54,15 +57,17 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
     current_time = Time.utc_now()
     today_seconds = Time.to_seconds_after_midnight(current_time) |> elem(0)
     target_seconds = Time.to_seconds_after_midnight(next_run_time) |> elem(0)
-    seconds_to_wait = rem(@seconds_in_day - today_seconds + target_seconds, 86_400)
+    seconds_to_wait = rem(@seconds_in_day - today_seconds + target_seconds, @seconds_in_day)
     SharedUtils.Logger.info(__MODULE__, "Seconds to wait: #{seconds_to_wait}")
     seconds_to_wait
   end 
     
+  # if there is no timestamp from previous runs, then generate new tokens
   def maybe_run_pipeline(nil, _) do 
       Process.send(self(), :generate_new_tokens, [])
   end
 
+  # if the timestamp was 24 or more hours ago, then generate new tokens
   def maybe_run_pipeline(%Timestamps{} = prev, %DateTime{} = current) do
     if DateTime.diff(prev.timestamp, current, :hour) >= 24 do
       Process.send(self(), :generate_new_tokens, [])
