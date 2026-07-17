@@ -1,0 +1,14 @@
+Interactive Elixir (1.18.1) - press Ctrl+C to exit (type h() ENTER for help)
+[info] [Elixir.GraphqlApi.Scheduler.GenerateTokens] Seconds to wait: 16563
+iex(1)> ts = DateTime.now("Etc/UTC")|>elem(1)
+~U[2026-07-16 22:24:10.025453Z]
+iex(2)> DateTime.shift(ts, hour: -24)
+~U[2026-07-15 22:24:10.025453Z]
+iex(3)> GraphqlApi.Scheduler.GenerateTokens.maybe_run_pipeline(%GraphqlApi.Accounts.Timestamps{timestamp: ts}, DateTime.shift(ts, hour: -25))
+:ok
+iex(4)> flush
+:generate_new_tokens
+:ok
+iex(5)> 
+
+

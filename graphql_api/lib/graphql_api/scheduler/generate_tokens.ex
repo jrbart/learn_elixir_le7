@@ -9,6 +9,8 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
 
   @seconds_in_day 24*60*60
 
+  # Startup (Initialization)
+
   def start_link(default) do
     GenServer.start_link(__MODULE__, default, name: __MODULE__)
   end
@@ -26,6 +28,8 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
 
     {:ok, initial_state, {:continue, :schedule_next}}
   end
+
+  # Callbacks
 
   @impl true
   def handle_info(:generate_new_tokens, state) do
@@ -46,20 +50,21 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
 
   # Helpers
 
-  def next_run() do
-    config = Application.get_env(:graphql_api, __MODULE__)
-    next_run_time = config[:daily_run]
-    SharedUtils.Logger.info(__MODULE__, "Daily run time: #{next_run_time}")
+  def next_run(
+      current_time \\ Time.utc_now(),
+      daily_time \\ Application.get_env(:graphql_api, __MODULE__)[:daily_run]
+    ) do
+    SharedUtils.Logger.info(__MODULE__, "Daily run time: #{daily_time}")
 
     # Number of seconds until tomorrow's run time
     # We recalulate this each time because tiny delays will eventually add
     # up and cause drift, running later and later...
-    current_time = Time.utc_now()
-    today_seconds = Time.to_seconds_after_midnight(current_time) |> elem(0)
-    target_seconds = Time.to_seconds_after_midnight(next_run_time) |> elem(0)
+    {today_seconds, _} = Time.to_seconds_after_midnight(current_time)
+    {target_seconds, _} = Time.to_seconds_after_midnight(daily_time)
     seconds_to_wait = rem(@seconds_in_day - today_seconds + target_seconds, @seconds_in_day)
     SharedUtils.Logger.info(__MODULE__, "Seconds to wait: #{seconds_to_wait}")
-    seconds_to_wait
+    # if current_time is so close that it is zero, then return a full day
+    if seconds_to_wait == 0, do: @seconds_in_day, else: seconds_to_wait
   end 
     
   # if there is no timestamp from previous runs, then generate new tokens
