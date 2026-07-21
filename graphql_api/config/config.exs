@@ -24,8 +24,7 @@ config :graphql_api, GraphqlApiWeb.Endpoint,
   pubsub_server: GraphqlApi.PubSub,
   live_view: [signing_salt: "H8m3FZGk"]
 
-config :graphql_api, GraphqlApi.Scheduler.GenerateTokens,
-  daily_run: ~T[03:00:00.000]
+config :graphql_api, GraphqlApi.Scheduler.GenerateTokens, daily_run: ~T[03:00:00.000]
 
 config :ecto_shorts,
   repo: GraphqlApi.Repo,

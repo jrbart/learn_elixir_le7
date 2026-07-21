@@ -7,7 +7,7 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
   """
   alias GraphqlApi.AuthPipe
 
-  @seconds_in_day 24*60*60
+  @seconds_in_day 24 * 60 * 60
 
   # Startup (Initialization)
 
@@ -22,7 +22,7 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
 
     # Check on startup if it has been more that 24 hours since
     # new tokens were generated
-    last_timestamp = AuthPipe.last_run() 
+    last_timestamp = AuthPipe.last_run()
     this_timesig = DateTime.now!("Etc/UTC")
     maybe_run_pipeline(last_timestamp, this_timesig)
 
@@ -51,9 +51,9 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
   # Helpers
 
   def next_run(
-      current_time \\ Time.utc_now(),
-      daily_time \\ Application.get_env(:graphql_api, __MODULE__)[:daily_run]
-    ) do
+        current_time \\ Time.utc_now(),
+        daily_time \\ Application.get_env(:graphql_api, __MODULE__)[:daily_run]
+      ) do
     SharedUtils.Logger.info(__MODULE__, "Daily run time: #{daily_time}")
 
     # Number of seconds until tomorrow's run time
@@ -65,11 +65,11 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
     SharedUtils.Logger.info(__MODULE__, "Seconds to wait: #{seconds_to_wait}")
     # if current_time is so close that it is zero, then return a full day
     if seconds_to_wait == 0, do: @seconds_in_day, else: seconds_to_wait
-  end 
-    
+  end
+
   # if there is no timestamp from previous runs, then generate new tokens
-  def maybe_run_pipeline(nil, _) do 
-      Process.send(self(), :generate_new_tokens, [])
+  def maybe_run_pipeline(nil, _) do
+    Process.send(self(), :generate_new_tokens, [])
   end
 
   # if the timestamp was 24 or more hours ago, then generate new tokens
@@ -77,7 +77,5 @@ defmodule GraphqlApi.Scheduler.GenerateTokens do
     if DateTime.diff(prev.timestamp, current, :hour) >= 24 do
       Process.send(self(), :generate_new_tokens, [])
     end
-   
   end
-   
 end

@@ -5,5 +5,4 @@ defmodule GraphqlApi.Accounts.Timestamps do
   schema "timestamps" do
     field :timestamp, :utc_datetime
   end
-
 end

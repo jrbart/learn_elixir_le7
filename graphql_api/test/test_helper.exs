@@ -1,4 +1,3 @@
-IO.inspect("Testing is starting")
 # Mock testing for the database
 Mimic.copy(GraphqlApi.Repo)
 

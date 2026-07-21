@@ -89,7 +89,7 @@ defmodule GraphqlApi.Users do
     with query <- Preference.compose(:user_id, id),
          %Preference{} = current_prefs <- Repo.one(query),
          changeset <- Preference.changeset(current_prefs, attrs) do
-      Repo.update(changeset) 
+      Repo.update(changeset)
     else
       _ -> {:error, not_found("id: not found", %{details: %{id: id}})}
     end
