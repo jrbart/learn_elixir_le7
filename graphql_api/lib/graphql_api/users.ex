@@ -7,6 +7,7 @@ defmodule GraphqlApi.Users do
       {:error, %{message: "message", details: %{key: value}}}
     suitable for Absinthe.
   """
+  alias GraphqlApi.TokenCache.CacheTable
   alias GraphqlApi.Accounts.User
   alias GraphqlApi.Accounts.UserToken
   alias GraphqlApi.Accounts.Preference
@@ -54,7 +55,7 @@ defmodule GraphqlApi.Users do
   Return a tagged tuple wih {:ok, token} or {:error, message}
   """
   def get_token_by_id(id) do
-    case Actions.find(UserToken, user_id: id) do
+    case CacheTable.get_token(id) do
       {:error, _} -> {:error, not_found("id: not found", %{details: %{id: id}})}
       token -> {:ok, token}
     end
