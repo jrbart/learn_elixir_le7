@@ -6,6 +6,7 @@
 
 # General application configuration
 import Config
+config :graphql_api, env: Config.config_env()
 
 config :graphql_api,
   ecto_repos: [GraphqlApi.Repo]

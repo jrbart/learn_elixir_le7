@@ -2,11 +2,14 @@ defmodule GraphqlApi.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
+  require Config
 
   use Application
 
   @impl true
   def start(_type, _args) do
+    if Application.get_env(:graphql_api, :env) == :test, do: IO.puts("\n\n\n\n\n")
+
     children = [
       GraphqlApi.Repo,
       GraphqlApiWeb.Telemetry,
