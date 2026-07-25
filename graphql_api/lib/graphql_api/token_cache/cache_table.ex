@@ -51,7 +51,6 @@ defmodule GraphqlApi.TokenCache.CacheTable do
     {:reply, token_from_db(id), state}
   end
 
-  @impl true
   def handle_call({:get_token, id}, _from, {:cache_on, table} = state) do
     SharedUtils.Logger.debug(__MODULE__, "Get token #{id}")
 
@@ -69,21 +68,17 @@ defmodule GraphqlApi.TokenCache.CacheTable do
     {:reply, res, state}
   end
 
-  @impl true
   def handle_call(:cache_on = status, _from, {:cache_off, nil} = _state) do
     {:reply, status, {status, create_cache()}}
   end
 
-  @impl true
   def handle_call(:cache_off = status, _from, {:cache_on, table} = _state) do
     :ets.delete(table)
     {:reply, status, {status, nil}}
   end
 
-  @impl true
-  def handle_call(_, _, {status, _table} = state) do
-    {:reply, status, state}
-  end
+  def handle_call(:cache_on, _, {:cache_on, _table} = state), do: {:reply, :cache_on, state}
+  def handle_call(:cache_off, _, {:cache_off, _table} = state), do: {:reply, :cache_off, state}
 
   # Helpers
 
