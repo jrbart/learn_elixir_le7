@@ -1,10 +1,79 @@
-# Untitled notebook
+<!-- livebook:{"autosave_interval_s":60} -->
 
-## Section one
+# Dev Notes - le7
 
 ```elixir
-IO.puts(
-  "test"
-)
+Mix.install([
+  {:pythonx, "~> 0.4.2"},
+  {:kino_pythonx, "~> 0.1.0"}
+])
+
+defmodule MyProcess do
+  def wait_for_message() do
+    receive do
+      msg -> msg
+    after
+      1000 -> :timeout
+    end
+    
+  end
+
+  defexception [:message]
+end
 ```
 
+## Processes
+
+Processes have mailbox, state, and time on the scheduler.
+
+When a process ends, it can send a signal with the reason it ended
+
+A process can also recieve signals from other processes.  If the signal is an `EXIT` signal then the process will exit, unless `trap_exit` has been set to true
+
+Processes created with Process.spawn:
+
+```elixir
+# Process.flag() doesn't matter because we are not monitoring or linking
+pid = Process.spawn(fn -> :ok end, [])
+MyProcess.wait_for_message()
+```
+
+options can include `:monitor` and `:link`
+
+* `:monitor` will cause the process to send a `{:DOWN, pid, _, _, _}` tuple when the process ends
+
+```elixir
+Process.flag(:trap_exit, true)
+pid = Process.spawn(fn -> :ok end, [:monitor])
+MyProcess.wait_for_message()
+```
+
+Note: this also causes `spawn` to return a monitor reference with the pid
+
+```elixir
+pid
+```
+
+* `:link` will cause two processes to be linked together (when one exits, an exit signal is sent to the other).
+* * If the exit reason is `:normal` this will be ignored
+  * Otherwise the exit signal will either be emitted in the receiving process or, if `:trap_exit` flag is true, the exit signal will be changed into a `{:reason, pid, message}` tuple
+
+```elixir
+Process.flag(:trap_exit, false)
+
+pid = Process.spawn(fn -> exit(:normal) end, [:link])
+MyProcess.wait_for_message()
+```
+
+```elixir
+Process.flag(:trap_exit, true)
+
+pid = Process.spawn(fn -> exit(:normal) end, [:link])
+MyProcess.wait_for_message()
+```
+
+more
+
+```elixir
+:ok
+```
