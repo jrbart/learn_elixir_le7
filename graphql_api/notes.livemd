@@ -31,10 +31,6 @@ end
 
 ## Processes
 
-
-
-<!-- livebook:{"break_markdown":true} -->
-
 Processes have mailbox, state, and time on the scheduler.
 
 When a process ends, it can send a signal with the reason it ended
@@ -170,16 +166,20 @@ Here are the patterns that have been abstracted:
 
 and for some of the most commonly used abstractions we have these
 
+<!-- livebook:{"break_markdown":true} -->
+
+*Worker Processes*
+
 * Agent
 
-* * API handles get/update and state
+* * API uses get/update to handle state
   * Agent.get()
   * Agent.update()
   * Agent.stop()
 
 * GenServer
 
-* * API
+* * API uses cast/call to interact
 
 * * Genserver.call()
   * Genserver.cast()
@@ -192,6 +192,42 @@ and for some of the most commonly used abstractions we have these
   * handle_info()
   * terminate()
 
+* Task
+
+* * spawn a task with async()
+  * * await() for the task to end
+  * * yield() to check on the task
+  * spawn a task with start()
+  * * no interaction, used for side effects
+  * a task that is spawned with start is used for its side-effects
+
+* GenStage (included)
+
+* * API can user call/cast like Genserver as well as ask/demand
+  * ask/3
+  * async_info/2
+  * cancel/3
+  * demand/1
+  * reply/2
+  * start/3
+  * start_link/3
+  * stop/3
+  * stream/2
+
+* * Callbacks usually coordinated with handle_demand/handle_event
+  * handle_call/3
+  * handle_cancel/3
+  * handle_cast/2
+  * handle_demand/2
+  * handle_events/3
+  * handle_info/2
+
+For abstractions with callbacks, the final value of the callback controls both the return value and how the callback loops to wait for the next message:
+
+<!-- livebook:{"break_markdown":true} -->
+
+*Super Processes*
+
 * Registry
 
 * * Registry.keys()
@@ -199,25 +235,22 @@ and for some of the most commonly used abstractions we have these
   * Registry.register()
   * Registry.values()
 
-* *
-
 * Supervisor
 
 * *
 
-* Task
-
-* *
-
-* GenStage (included)
-
-* *
-
-The final value of the callback controls both the return value and how the callback loops to wait for the next message:
+```elixir
+:ok
+```
 
 <!-- livebook:{"reevaluate_automatically":true} -->
 
 ```elixir
 :ok
-|> IO.inspect()
 ```
+
+block1
+
+<!-- livebook:{"break_markdown":true} -->
+
+block2
