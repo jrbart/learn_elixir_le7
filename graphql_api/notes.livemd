@@ -9,7 +9,7 @@ Mix.install([
 ])
 
 defmodule MyProcess do
-  def wait_for_message(timeout \\ 1000) do
+  def wait_for_message(timeout \\ 3000) do
     receive do
       msg -> msg
     after
@@ -31,6 +31,10 @@ end
 
 ## Processes
 
+
+
+<!-- livebook:{"break_markdown":true} -->
+
 Processes have mailbox, state, and time on the scheduler.
 
 When a process ends, it can send a signal with the reason it ended
@@ -38,6 +42,8 @@ When a process ends, it can send a signal with the reason it ended
 A process can also recieve signals from other processes.  If the signal is an `EXIT` signal then the process will exit, unless `trap_exit` has been set to true
 
 Processes created with Process.spawn:
+
+<!-- livebook:{"reevaluate_automatically":true} -->
 
 ```elixir
 # Process.flag() doesn't matter because we are not monitoring or linking
@@ -49,6 +55,8 @@ options can include `:monitor` and `:link`
 
 * `:monitor` will cause a `{:DOWN, pid, _, _, _}` message when the process ends
 
+<!-- livebook:{"reevaluate_automatically":true} -->
+
 ```elixir
 Process.flag(:trap_exit, false)
 pid = Process.spawn(fn -> exit(:normal) end, [:monitor])
@@ -56,6 +64,8 @@ MyProcess.wait_for_message()
 ```
 
 * * It doesn't matter what the `:trap_exit` flag is...
+
+<!-- livebook:{"reevaluate_automatically":true} -->
 
 ```elixir
 Process.flag(:trap_exit, true)
@@ -65,12 +75,16 @@ MyProcess.wait_for_message()
 
 * * Note: this also causes `spawn` to return a monitor reference with the pid
 
+<!-- livebook:{"reevaluate_automatically":true} -->
+
 ```elixir
 pid
 ```
 
 * `:link` will cause two processes to be linked together (when one exits, an exit signal is sent to the other).
 * * If the exit reason is `:normal` this will be ignored
+
+<!-- livebook:{"reevaluate_automatically":true} -->
 
 ```elixir
 Process.flag(:trap_exit, false)
@@ -80,6 +94,8 @@ MyProcess.wait_for_message()
 ```
 
 * * if `:trap_exit` flag is true, the exit signal will be changed into a `{:reason, pid, message}` tuple and put in the process's mailbox
+
+<!-- livebook:{"reevaluate_automatically":true} -->
 
 ```elixir
 Process.flag(:trap_exit, true)
@@ -121,16 +137,16 @@ MyProcess.wait_for_message(5000)
 ```elixir
 Process.flag(:trap_exit, true)
 
-pid = Process.spawn(fn -> raise MyException, message: "my exception" end, [:link])
+pid = Process.spawn(fn -> 0/0 end, [:link])
 MyProcess.wait_for_message(5000)
+IEx.Helpers.flush()
 ```
 
 ```elixir
 Process.flag(:trap_exit, true)
 
-pid = Process.spawn(fn -> 0/0 end, [:link])
+pid = Process.spawn(fn -> raise MyException, message: "my exception" end, [:link])
 MyProcess.wait_for_message(5000)
-IEx.Helpers.flush()
 ```
 
 ## OTP Abstractions
@@ -199,6 +215,9 @@ and for some of the most commonly used abstractions we have these
 
 The final value of the callback controls both the return value and how the callback loops to wait for the next message:
 
-```elixir
+<!-- livebook:{"reevaluate_automatically":true} -->
 
+```elixir
+:ok
+|> IO.inspect()
 ```
