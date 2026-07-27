@@ -13,7 +13,7 @@ defmodule MyProcess do
     receive do
       msg -> msg
     after
-      1000 -> :timeout
+      timeout -> :timeout
     end
   end
 
@@ -121,13 +121,84 @@ MyProcess.wait_for_message(5000)
 ```elixir
 Process.flag(:trap_exit, true)
 
-pid = Process.spawn(fn -> 0/0 end, [:link])
+pid = Process.spawn(fn -> raise MyException, message: "my exception" end, [:link])
 MyProcess.wait_for_message(5000)
 ```
 
 ```elixir
 Process.flag(:trap_exit, true)
 
-pid = Process.spawn(fn -> raise MyException, message: "my exception" end, [:link])
-MyProcess.wait_for_message()
+pid = Process.spawn(fn -> 0/0 end, [:link])
+MyProcess.wait_for_message(5000)
+IEx.Helpers.flush()
+```
+
+## OTP Abstractions
+
+Abstractions like Task, Agent, Genserver, Supervisor were created because some patterns were often repeated
+
+Here are the patterns that have been abstracted:
+
+* Client Section
+
+* * `start_link`
+  * `child_spec`
+  * API calls
+  * Process.send()
+  * Process.send_after()
+
+* Server (Callback) Section
+
+* * `init(initial_state)`
+  * `handle_xxx(:message, _from, state)`
+
+and for some of the most commonly used abstractions we have these
+
+* Agent
+
+* * API handles get/update and state
+  * Agent.get()
+  * Agent.update()
+  * Agent.stop()
+
+* GenServer
+
+* * API
+
+* * Genserver.call()
+  * Genserver.cast()
+
+* * Callbacks
+
+* * handle_call()
+  * handle_cast()
+  * handle_continue()
+  * handle_info()
+  * terminate()
+
+* Registry
+
+* * Registry.keys()
+  * Registry.lookup()
+  * Registry.register()
+  * Registry.values()
+
+* *
+
+* Supervisor
+
+* *
+
+* Task
+
+* *
+
+* GenStage (included)
+
+* *
+
+The final value of the callback controls both the return value and how the callback loops to wait for the next message:
+
+```elixir
+
 ```
