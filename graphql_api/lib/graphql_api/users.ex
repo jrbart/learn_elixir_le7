@@ -67,7 +67,11 @@ defmodule GraphqlApi.Users do
   def create_user(attrs) do
     user = User.changeset(%User{}, attrs)
 
-    Repo.insert(user, preload: :preferences)
+    case Repo.insert(user, preload: :preferences) do
+      {:ok, user} -> update_token(user.id,"change_me")
+                     {:ok, user}
+      other -> other
+    end
   end
 
   @doc """
@@ -122,5 +126,14 @@ defmodule GraphqlApi.Users do
   @doc false
   def query(queryable, _params) do
     queryable
+  end
+
+  # TODO
+  # move token generation into some sort of auth module 
+  # examine using phoenix gen.auth to satisfy this 
+  @doc false
+  def gen_token() do
+    :rand.bytes(12)
+    |> Base.encode16()
   end
 end

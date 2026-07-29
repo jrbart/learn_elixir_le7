@@ -1,14 +1,6 @@
 defmodule GraphqlApi.AuthPipe.UserToken do
   use GenStage
-
-  # TODO
-  # move token generation into some sort of auth module 
-  # examine using phoenix gen.auth to satisfy this 
-
-  def gen_token() do
-    :rand.bytes(12)
-    |> Base.encode16()
-  end
+  alias GraphqlApi.Users
 
   def start_link(_init) do
     GenStage.start_link(__MODULE__, :user_token, name: __MODULE__)
@@ -28,7 +20,7 @@ defmodule GraphqlApi.AuthPipe.UserToken do
     res =
       for user <- events do
         SharedUtils.Logger.info(__MODULE__, "Generate user #{user} token")
-        {user, gen_token()}
+        {user, Users.gen_token()}
       end
 
     {:noreply, res, state}
