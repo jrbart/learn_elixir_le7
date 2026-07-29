@@ -53,10 +53,10 @@ defmodule GraphqlApi.AuthPipe do
     loop_exits(pids)
     Process.flag(:trap_exit, trap_exits) # we want to set the flag back to what it was
 
-    SharedUtils.Logger.debug(__MODULE__,"authpipe done HERE...")
+    SharedUtils.Logger.debug(__MODULE__, "authpipe done HERE...")
     CacheTable.enable_cache()
     
-    SharedUtils.Logger.debug(__MODULE__,"run done HERE...")
+    SharedUtils.Logger.debug(__MODULE__, "run done HERE...")
   end
 
   def last_run do
@@ -64,16 +64,16 @@ defmodule GraphqlApi.AuthPipe do
   end
 
   defp loop_exits([]) do
-    SharedUtils.Logger.debug(__MODULE__,"no more pids")
+    SharedUtils.Logger.debug(__MODULE__, "no more pids")
   end
 
   defp loop_exits(pids) do
     receive do
       {x, y, z} ->
-        SharedUtils.Logger.debug(__MODULE__,"message #{x} #{z}")
+        SharedUtils.Logger.debug(__MODULE__, "message #{x} #{z}")
         loop_exits(Enum.reject(pids, fn {:ok, pid} -> pid == y end))
     after
-      1000 -> SharedUtils.Logger.debug(__MODULE__,"message timeout")
+      1000 -> SharedUtils.Logger.debug(__MODULE__, "message timeout")
     end
   end
 end
