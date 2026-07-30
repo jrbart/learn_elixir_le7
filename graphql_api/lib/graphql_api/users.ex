@@ -7,6 +7,7 @@ defmodule GraphqlApi.Users do
       {:error, %{message: "message", details: %{key: value}}}
     suitable for Absinthe.
   """
+  # we need to require this to get the preload macro
   require Ecto.Query
   alias GraphqlApi.TokenCache.CacheTable
   alias GraphqlApi.Accounts.User
