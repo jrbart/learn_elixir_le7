@@ -72,12 +72,12 @@ defmodule GraphqlApi.Users do
     user = User.changeset(%User{}, attrs)
 
     
-    Repo.insert(user, preload: :preferences)
-    # case Repo.insert(user, preload: :preferences) do
-    #   {:ok, user} -> update_token(user.id,"change_me")
-    #                  {:ok, user}
-    #   other -> other
-    # end
+    # Repo.insert(user, preload: :preferences)
+    case Repo.insert(user, preload: :preferences) do
+      {:ok, user} -> update_token(user.id,"change_me")
+                     {:ok, user}
+      other -> other
+    end
   end
 
   @doc """
