@@ -21,6 +21,7 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
           likesPhoneCalls
           likesFaxes
         }
+        token
       }
     }
   """
@@ -43,8 +44,9 @@ defmodule GraphqlApiWeb.Schema.MutationsTest do
       assert %{"name" => ^name, "email" => ^email} = user
 
       # Cheack that database entry was actually created
-      assert {:ok, user} = Users.get_by_id(user["id"])
+      assert {:ok, user} = Users.get_by_id(user["id"], preload: :token)
       assert user.name == "test"
+      assert user.token.token == "change_me"
     end
 
     test "fails if missing email" do

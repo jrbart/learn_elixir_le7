@@ -23,6 +23,11 @@ defmodule GraphqlApiWeb.Schema.Types do
 
     field :preferences, :user_preferences do
       resolve dataloader(Users)
+    end  
+    field :token, :string do
+      resolve fn parent, _, _ ->
+        Users.get_token_by_id(parent.id)
+      end
     end
   end
 end
