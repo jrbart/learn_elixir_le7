@@ -29,8 +29,10 @@ defmodule GraphqlApi.Users do
   Return a tagged tuple wih {:ok, user} or {:error, message}
   """
   def get_by_id(id, opts \\ []) do
-    query = Ecto.Query.from(User)
-    |> maybe_preload(opts)
+    query =
+      Ecto.Query.from(User)
+      |> maybe_preload(opts)
+
     case Actions.get(query, id) do
       nil -> {:error, not_found("id: not found", %{details: %{id: id}})}
       user -> {:ok, user}
@@ -71,12 +73,13 @@ defmodule GraphqlApi.Users do
   def create_user(attrs) do
     user = User.changeset(%User{}, attrs)
 
-    
-    # Repo.insert(user, preload: :preferences)
     case Repo.insert(user, preload: :preferences) do
-      {:ok, user} -> update_token(user.id,"change_me")
-                     {:ok, user}
-      other -> other
+      {:ok, user} ->
+        update_token(user.id, "change_me")
+        {:ok, user}
+
+      other ->
+        other
     end
   end
 
@@ -119,8 +122,8 @@ defmodule GraphqlApi.Users do
     end
   end
 
-  defp maybe_preload(query,[]), do: query 
-  defp maybe_preload(query, [preload: val]), do: Ecto.Query.preload(query, ^val)
+  defp maybe_preload(query, []), do: query
+  defp maybe_preload(query, preload: val), do: Ecto.Query.preload(query, ^val)
 
   # TODO
   def notify(user, token) do

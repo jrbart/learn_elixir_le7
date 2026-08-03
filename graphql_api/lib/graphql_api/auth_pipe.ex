@@ -42,7 +42,8 @@ defmodule GraphqlApi.AuthPipe do
     # so now we can set the Producer demand to :forward to start moving
     # events through the pipeline and be sure that all Consumers will
     # receive all the Broadcast tokens
-    trap_exits = Process.flag(:trap_exit, true) # we want to catch all exits from the pipeline
+    # we want to catch all exits from the pipeline
+    trap_exits = Process.flag(:trap_exit, true)
     GenStage.demand(UserProducer, :forward)
 
     # Wait for pipeline to finish then enable cache
@@ -51,11 +52,12 @@ defmodule GraphqlApi.AuthPipe do
     # (maybe more simple to just clear the cache at the end of run?)
     SharedUtils.Logger.debug(__MODULE__, "waiting for authpipe HERE...")
     loop_exits(pids)
-    Process.flag(:trap_exit, trap_exits) # we want to set the flag back to what it was
+    # we want to set the flag back to what it was
+    Process.flag(:trap_exit, trap_exits)
 
     SharedUtils.Logger.debug(__MODULE__, "authpipe done HERE...")
     CacheTable.enable_cache()
-    
+
     SharedUtils.Logger.debug(__MODULE__, "run done HERE...")
   end
 

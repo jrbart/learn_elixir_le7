@@ -13,6 +13,5 @@ defmodule GraphqlApi.UsersTest do
 
       assert token == "change_me"
     end
-
   end
 end
