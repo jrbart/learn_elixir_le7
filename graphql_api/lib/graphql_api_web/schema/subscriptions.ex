@@ -13,5 +13,10 @@ defmodule GraphqlApiWeb.Schema.Subscriptions do
       config(fn %{user_id: id}, _ -> {:ok, topic: "user:#{id}"} end)
       trigger(:update_user_preferences, topic: fn %{user_id: id} -> "user:#{id}" end)
     end
+
+    field :user_auth_token, :user_token do
+      arg :user_id, non_null(:id)
+      config(fn %{user_id: id}, _ -> {:ok, topic: "token:#{id}"} end)
+    end
   end
 end

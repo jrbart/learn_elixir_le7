@@ -125,9 +125,12 @@ defmodule GraphqlApi.Users do
   defp maybe_preload(query, []), do: query
   defp maybe_preload(query, preload: val), do: Ecto.Query.preload(query, ^val)
 
-  # TODO
-  def notify(user, token) do
-    Absinthe.Subscription.publish(GraphqlApiWeb.Endpoint, token, user_token: user)
+  def notify(user_id, token) do
+    Absinthe.Subscription.publish(
+      GraphqlApiWeb.Endpoint, 
+      %{user_id: user_id, auth_token: token}, 
+      user_auth_token: "token:#{user_id}"
+    )
   end
 
   # Query for Dataloaddataer
