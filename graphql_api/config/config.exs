@@ -50,6 +50,15 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Configure libcluster
+config :libcluster,
+  topologies: [
+    epmd_example: [
+      strategy: Elixir.Cluster.Strategy.Epmd,
+      config: [
+        timeout: 30_000,
+        hosts: [:"a@127.0.0.1", :"b@127.0.0.1"]]]]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

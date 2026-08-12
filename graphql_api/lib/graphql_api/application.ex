@@ -23,7 +23,8 @@ defmodule GraphqlApi.Application do
       GraphqlApiWeb.Endpoint,
       {Absinthe.Subscription, pubsub: GraphqlApiWeb.Endpoint},
       GraphqlApi.Scheduler,
-      {GraphqlApi.HitCounter, []}
+      {GraphqlApi.HitCounter, []},
+      {Cluster.Supervisor, [Application.get_env(:libcluster, :topologies)]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
