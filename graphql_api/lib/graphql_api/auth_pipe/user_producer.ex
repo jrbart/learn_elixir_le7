@@ -16,14 +16,14 @@ defmodule GraphqlApi.AuthPipe.UserProducer do
     {:producer, {count, init_users}, demand: :accumulate}
   end
 
+  # See this for graceful shutdown: 
+  # https://gen-stage.hexdocs.pm/GenStage.html#c:handle_demand/2-stopping-when-events-are-over
+  # See this for explanation of hibernate
+  # https://elixir.hexdocs.pm/GenServer.html#c:handle_call/3
   @impl true
   def handle_demand(_demand, {0, []} = state) do
     SharedUtils.Logger.info(__MODULE__, "Graceful shutdown")
-    # See this for graceful shutdown: 
-    # https://gen-stage.hexdocs.pm/GenStage.html#c:handle_demand/2-stopping-when-events-are-over
     GenStage.async_info(self(), :last_user)
-    # See this for explanation of hibernate
-    # https://elixir.hexdocs.pm/GenServer.html#c:handle_call/3
     {:noreply, [], state, :hibernate}
   end
 
@@ -39,7 +39,6 @@ defmodule GraphqlApi.AuthPipe.UserProducer do
 
       # Send everything we have, track remaining demand
       true ->
-        # SharedUtils.Logger.info(__MODULE__, "Wait for more, hibernate")
         GenStage.async_info(self(), :last_user)
         {:noreply, users, {count - demand, []}, :hibernate}
     end
