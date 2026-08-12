@@ -57,7 +57,10 @@ config :libcluster,
       strategy: Elixir.Cluster.Strategy.Epmd,
       config: [
         timeout: 30_000,
-        hosts: [:"a@127.0.0.1", :"b@127.0.0.1"]]]]
+        hosts: [:"a@127.0.0.1", :"b@127.0.0.1"]
+      ]
+    ]
+  ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
