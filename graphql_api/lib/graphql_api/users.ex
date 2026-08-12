@@ -127,8 +127,8 @@ defmodule GraphqlApi.Users do
 
   def notify(user_id, token) do
     Absinthe.Subscription.publish(
-      GraphqlApiWeb.Endpoint, 
-      %{user_id: user_id, auth_token: token}, 
+      GraphqlApiWeb.Endpoint,
+      %{user_id: user_id, auth_token: token},
       user_auth_token: "token:#{user_id}"
     )
   end
